@@ -1,4 +1,3 @@
-import './App.css';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Login from './pages/auth/Login';
 import Logout from './pages/auth/Logout';

@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from 'react-router-dom';
 import { Button, CircularProgress } from '@mui/material';
 import API from '../../apis/clientAPI';
+import './Home.css';
 
 const Home = () => {
     const [text, setText] = useState('');
@@ -26,7 +27,7 @@ const Home = () => {
             .catch(error => {
                 setIsLoading(false);
                 if (error.response.status === 401) {
-                    navigate('/logout');
+                    return navigate('/logout');
                 }
                 console.error('Error checking text:', error);
                 alert('Error checking text');
@@ -65,12 +66,7 @@ const Home = () => {
                     />
                     {isLoading && <CircularProgress
                         size={12}
-                        style={{
-                            marginLeft: '10px',
-                            position: 'absolute',
-                            right: '10px',
-                            top: '10px',
-                        }}
+                        className='loading'
                     />}
                 </div>
                 <Button
@@ -83,9 +79,7 @@ const Home = () => {
                     Check Grammar
                     {isLoading && <CircularProgress
                         size={12}
-                        style={{
-                            marginLeft: '10px',
-                        }}
+                        className='loading'
                     />}
                 </Button>
             </div>

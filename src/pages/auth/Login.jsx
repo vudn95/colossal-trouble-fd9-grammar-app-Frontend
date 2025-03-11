@@ -3,6 +3,7 @@ import API from '../../apis/clientAPI';
 import { Button, CircularProgress, FormControl, Input } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
+import './Login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -32,31 +33,11 @@ const Login = () => {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100vh',
-      width: '100%',
-      overflow: 'auto',
-    }}>
-      <div style={{
-        textAlign: 'center',
-        padding: '20px',
-        border: '1px solid #ccc',
-        borderRadius: '10px',
-
-      }}>
+    <div className='login-container'>
+      <div className='login-body'>
         <h2>Login</h2>
-        <form onSubmit={handleLogin} style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '300px',
-        }}>
-          <FormControl style={{
-            marginBottom: '10px',
-          }}>
+        <form onSubmit={handleLogin} className='login-form'>
+          <FormControl className='form-control'>
             <Input
               type="email"
               placeholder="Enter your email"
@@ -66,9 +47,7 @@ const Login = () => {
               required
             />
           </FormControl>
-          <FormControl style={{
-            marginBottom: '10px',
-          }}>
+          <FormControl className='form-control'>
             <Input
               type="password"
               placeholder="Enter your password"
@@ -86,9 +65,6 @@ const Login = () => {
             Login
             {isLoading && <CircularProgress
               size={12}
-              style={{
-                marginLeft: '10px',
-              }}
             />}
           </Button>
         </form>
