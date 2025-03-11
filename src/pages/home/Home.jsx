@@ -18,6 +18,9 @@ const Home = () => {
     }, [])
 
     const handleCheckText = async () => {
+        if (!text.trim()) {
+            return;
+        }
         setIsLoading(true);
         API.post('/grammar/check-grammar', { text })
             .then(response => {
@@ -33,6 +36,16 @@ const Home = () => {
                 alert('Error checking text');
             });
     };
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            handleCheckText();
+        }, 1000);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [text]);
 
     return (
         <div className='home-container'>
@@ -69,19 +82,6 @@ const Home = () => {
                         className='loading'
                     />}
                 </div>
-                <Button
-                    variant='contained'
-                    disabled={isLoading || !text.trim()}
-                    onClick={() => {
-                        handleCheckText();
-                    }}
-                >
-                    Check Grammar
-                    {isLoading && <CircularProgress
-                        size={12}
-                        className='loading'
-                    />}
-                </Button>
             </div>
         </div>
     );
