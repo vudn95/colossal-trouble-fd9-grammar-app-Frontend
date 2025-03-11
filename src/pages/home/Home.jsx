@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Cookies from "js-cookie";
 import { useNavigate } from 'react-router-dom';
 import { Button, CircularProgress } from '@mui/material';
@@ -10,6 +10,7 @@ const Home = () => {
     const [text, setText] = useState('');
     const [output, setOutput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const queuedText = useRef(null);
     const navigate = useNavigate();
     useEffect(() => {
         const token = Cookies.get('token');
@@ -20,24 +21,39 @@ const Home = () => {
 
     const debouncedText = useDebounce(text, 500);
 
+    const checkGrammar = async (textToCheck) => {
+        if (!textToCheck.trim()) return;
+
+        setIsLoading(true);
+
+        try {
+            const response = await API.post("/grammar/check-grammar", { text: textToCheck });
+            setOutput(response.data.data?.trim());
+            setIsLoading(false);
+
+            if (queuedText.current !== null) {
+                const nextText = queuedText.current;
+                queuedText.current = null;
+                checkGrammar(nextText);
+            }
+        } catch (error) {
+            setIsLoading(false);
+            if (error.response?.status === 401) {
+                return navigate("/logout");
+            }
+            console.error("Error checking text:", error);
+            alert("Error checking text");
+        }
+    };
+
     useEffect(() => {
         if (!debouncedText.trim()) return;
 
-        setIsLoading(true);
-        API.post('/grammar/check-grammar', { text: debouncedText })
-            .then(response => {
-                setOutput(response.data.data?.trim());
-            })
-            .catch(error => {
-                if (error.response?.status === 401) {
-                    return navigate('/logout');
-                }
-                console.error('Error checking text:', error);
-                alert('Error checking text');
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
+        if (isLoading) {
+            queuedText.current = debouncedText;
+        } else {
+            checkGrammar(debouncedText);
+        }
     }, [debouncedText]);
 
     return (
