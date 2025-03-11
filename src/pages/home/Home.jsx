@@ -65,7 +65,6 @@ const Home = () => {
                     <textarea
                         className='input-content'
                         placeholder='Enter your text here'
-                        disabled={isLoading}
                         onChange={(e) => {
                             setText(e.target.value);
                         }}
