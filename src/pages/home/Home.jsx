@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Cookies from "js-cookie";
 import { useNavigate } from 'react-router-dom';
 import { Button, CircularProgress } from '@mui/material';
@@ -9,10 +9,12 @@ const Home = () => {
     const [output, setOutput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const token = Cookies.get('token');
-    if (!token) {
-        navigate('/login');
-    };
+    useEffect(() => {
+        const token = Cookies.get('token');
+        if (!token) {
+            navigate('/login');
+        };
+    }, [])
 
     const handleCheckText = async () => {
         setIsLoading(true);

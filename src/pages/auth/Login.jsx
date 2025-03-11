@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import API from '../../apis/clientAPI';
 import { Button, CircularProgress, FormControl, Input } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -10,10 +10,12 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const token = Cookies.get('token');
-  if (token) {
-    navigate('/');
-  };
+  useEffect(() => {
+    const token = Cookies.get('token');
+    if (token) {
+      navigate('/');
+    };
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();

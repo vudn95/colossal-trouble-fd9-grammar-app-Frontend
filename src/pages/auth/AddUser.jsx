@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import API from '../../apis/clientAPI';
 import { Button, CircularProgress, FormControl, Input } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -11,15 +11,17 @@ const AddUser = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const token = Cookies.get('token');
-  try {
-    const decoded = jwtDecode(token);
-    if (!decoded.is_admin) {
+  useEffect(() => {
+    const token = Cookies.get('token');
+    try {
+      const decoded = jwtDecode(token);
+      if (!decoded.is_admin) {
+        navigate('/');
+      };
+    } catch (error) {
       navigate('/');
-    };
-  } catch (error) {
-    navigate('/');
-  }
+    }
+  }, []);
 
   const handleAdd = async (e) => {
     e.preventDefault();

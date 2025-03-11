@@ -5,6 +5,10 @@ import Logout from './pages/auth/Logout';
 import Home from './pages/home/Home';
 import AddUser from './pages/auth/AddUser';
 
+const RedirestToHome = () => {
+  return <Navigate to="/" />;
+}
+
 function App() {
   return (
       <Routes>
@@ -14,7 +18,7 @@ function App() {
         <Route path="/add-user" Component={AddUser} />
         {/* Home */}
         <Route path="/" Component={Home} />
-        <Route path="*" Component={Navigate} />
+        <Route path="*" Component={RedirestToHome} />
       </Routes>
   );
 }
