@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, CircularProgress } from '@mui/material';
 import API from '../../apis/clientAPI';
 import './Home.css';
+import useDebounce from '../../hook/useDebounce';
 
 const Home = () => {
     const [text, setText] = useState('');
@@ -17,35 +18,27 @@ const Home = () => {
         };
     }, [])
 
-    const handleCheckText = async () => {
-        if (!text.trim()) {
-            return;
-        }
+    const debouncedText = useDebounce(text, 500);
+
+    useEffect(() => {
+        if (!debouncedText.trim()) return;
+
         setIsLoading(true);
-        API.post('/grammar/check-grammar', { text })
+        API.post('/grammar/check-grammar', { text: debouncedText })
             .then(response => {
-                setIsLoading(false);
                 setOutput(response.data.data?.trim());
             })
             .catch(error => {
-                setIsLoading(false);
-                if (error.response.status === 401) {
+                if (error.response?.status === 401) {
                     return navigate('/logout');
                 }
                 console.error('Error checking text:', error);
                 alert('Error checking text');
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
-    };
-
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            handleCheckText();
-        }, 1000);
-
-        return () => {
-            clearTimeout(handler);
-        };
-    }, [text]);
+    }, [debouncedText]);
 
     return (
         <div className='home-container'>
